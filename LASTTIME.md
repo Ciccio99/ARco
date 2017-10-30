@@ -8,3 +8,11 @@
 - Add in ARkit plugin.
 - Add in Plane Manager
 - Set Take in planes and set them as points of new bezier arc. (Set mid point as some fudged number above the highest of the start and end points)
+
+# 2017/10/30
+
+## Where did you leave off?
+- Implemented LineRender Bezier Curve
+- Added ARkit plugin into Unity
+
+## What next?

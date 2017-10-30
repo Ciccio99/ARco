@@ -9,10 +9,11 @@ public class BezierCurveInspector : Editor {
 	private BezierCurve curve;
 	private Transform handleTransform;
 	private Quaternion handleRotation;
-	private const int lineSteps = 30;
+	private int lineSteps = 30;
 
 	private void OnSceneGUI () {
 		curve = target as BezierCurve;
+		lineSteps = curve.lineSteps;
 		handleTransform = curve.transform;
 		handleRotation = Tools.pivotRotation == PivotRotation.Local ? 
 			handleTransform.rotation : Quaternion.identity;
@@ -27,11 +28,13 @@ public class BezierCurveInspector : Editor {
 
 		Handles.color = Color.white;
 		Vector3 lineStart = curve.GetPoint (0f);
+	
 		for (int i = 1; i<= lineSteps; i++) {
 			Vector3 lineEnd = curve.GetPoint (i / (float) lineSteps);
 			Handles.DrawLine (lineStart, lineEnd);
 			lineStart = lineEnd;
 		}
+		curve.SetLineRendererCurve ();
 	}
 
 	private Vector3 ShowPoint (int index) {

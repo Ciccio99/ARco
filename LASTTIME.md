@@ -14,5 +14,8 @@
 ## Where did you leave off?
 - Implemented LineRender Bezier Curve
 - Added ARkit plugin into Unity
+- Implemented Plane manager
+- Began Implementing ArcManager
 
 ## What next?
+- ArcManager: touch select anchor points and use them to create an arc

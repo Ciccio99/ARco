@@ -1,33 +1,79 @@
 ﻿using System;
 using System.Collections;
-
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
+
 public class ArcManager : Singleton<ArcManager> {
 
-	List<GameObject> arcList;
-	[SerializeField]
-	private GameObject _arcPrefab;
-	private ArcAnchors _currentArcAnchors;
+    [SerializeField]
+    private Material _arcMaterial;
+    private List<GameObject> _arcList;
+    private ArcFactory _arcFactory;
+    private Vector3? _startPoint, _endPoint;
 
-	void Awake()
-	{
-		if (_arcPrefab == null)
-			throw new NullReferenceException ("ArcManager: Missing Arc prefab reference!");
-		arcList = new List<GameObject> ();
+    private void OnEnable() {
+        _arcFactory = GetComponent<ArcFactory> () ?? gameObject.AddComponent<ArcFactory> ();
 
-	}
+        _arcList = new List<GameObject> ();
 
-	
+        InputManager.Instance.ARTouchBeganUpdateEvent += OnTouchBegan;
+    }
+
+    public void OnTouchBegan (Touch touch) {
+#if UNITY_EDITOR
+        var ray = Camera.main.ScreenPointToRay (touch.position);
+        RaycastHit hit;
+        if (Physics.Raycast (ray.origin, ray.direction, out hit)) {
+            _CollectPoint (hit.point);   
+        }
+#else
+        var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
+
+        ARPoint point = new ARPoint
+        {
+            x = screenPosition.x,
+            y = screenPosition.y
+        };
+
+        // use arkit hit test to find planes
+        List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface().HitTest(point,
+                    ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent);
+        if (hitResults.Count > 0)
+        {
+            foreach (var hitResult in hitResults)
+            {
+                Vector3 position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
+                _CollectPoint (position);
+                break;
+            }
+        }
+#endif
+    }
+
+    private void _InstantiateArc (Vector3 start, Vector3 end) {
+        var go = _arcFactory.GetArc ();
+        _arcList.Add (go);
+
+        go.AddComponent<StealCamTextures> ();
+        go.GetComponent<MeshRenderer> ().material = _arcMaterial;
+
+        var arc = go.GetComponent<ProceduralArc> ();
+        arc.noisyArc = true;
+        arc.SetPoints (start, end);
+        arc.Generate ();
+    }
+
+    private void _CollectPoint (Vector3 point) {
+        if (_startPoint == null ) {
+            _startPoint = point;
+            return;
+        }
+
+        _endPoint = point;
+        _InstantiateArc (_startPoint.Value, _endPoint.Value);
+        _startPoint = _endPoint = null;
+    }
 }
 
-public struct ArcAnchors {
-	ARPlaneAnchor anchor1;
-	ARPlaneAnchor anchor2;
 
-	public ArcAnchors (ARPlaneAnchor anchor1, ARPlaneAnchor anchor2) {
-		this.anchor1 = anchor1;
-		this.anchor2 = anchor2;
-	}
-}

@@ -28,7 +28,8 @@ public class InputManager : Singleton<InputManager> {
 
 	void Update () {
 		#if UNITY_EDITOR
-			//CheckMouse ();
+			CheckMouse ();
+            
 		#else
 			CheckTouch ();
 		#endif
@@ -63,10 +64,20 @@ public class InputManager : Singleton<InputManager> {
 		}
 	}
 
+    private void CheckMouse()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Touch fakeTouch = new Touch();
+            fakeTouch.phase = TouchPhase.Began;
+            fakeTouch.position = Input.mousePosition;
+            if (ARTouchBeganUpdateEvent != null)
+                ARTouchBeganUpdateEvent(fakeTouch);         
+        }
+    }
+
+
 	public void Ping () {
 		// Function to create instance of this singleton
 	}
-
-
-
 }

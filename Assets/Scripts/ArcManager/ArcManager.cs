@@ -56,6 +56,8 @@ public class ArcManager : Singleton<ArcManager> {
         _arcList.Add (go);
 
         go.AddComponent<StealCamTextures> ();
+        go.AddComponent<ShatterOnDistance> ();
+
         go.GetComponent<MeshRenderer> ().material = _arcMaterial;
 
         var arc = go.GetComponent<ProceduralArc> ();

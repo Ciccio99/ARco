@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent (typeof (MeshFilter), typeof (MeshRenderer))]
 public class ProceduralArc : MonoBehaviour {
     [Range (3, 100)]
-    public int lineSteps = 40;
+    public int lineSteps = 90;
     [Range (3, 100)]
     public int smoothness = 40;
 
@@ -24,8 +24,9 @@ public class ProceduralArc : MonoBehaviour {
         bezierPointsPosition[2] = end;
         var endStart = (end - start);
         var mid = start + (endStart * 0.5f);
+        var maxY = Mathf.Max (start.y, end.y);
 
-        var finalMid = new Vector3 (mid.x, mid.magnitude / 4f, mid.z);
+        var finalMid = new Vector3 (mid.x, maxY + (mid.magnitude / 2f), mid.z);
         bezierPointsPosition[1] = finalMid;
     }   
 

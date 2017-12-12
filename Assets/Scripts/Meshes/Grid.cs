@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Sample grid generation component to test mesh generation
+ */
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof (MeshFilter), typeof (MeshRenderer))]

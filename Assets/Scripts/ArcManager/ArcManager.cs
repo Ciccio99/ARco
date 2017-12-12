@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Author: Alberto Scicali
+ * Manager for maintaining arcs in the current play session
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +25,10 @@ public class ArcManager : Singleton<ArcManager> {
         InputManager.Instance.ARTouchBeganUpdateEvent += OnTouchBegan;
     }
 
+    /// <summary>
+    /// On the touch began action.
+    /// </summary>
+    /// <param name="touch">Touch.</param>
     public void OnTouchBegan (Touch touch) {
 #if UNITY_EDITOR
         var ray = Camera.main.ScreenPointToRay (touch.position);
@@ -51,11 +60,16 @@ public class ArcManager : Singleton<ArcManager> {
 #endif
     }
 
+    /// <summary>
+    /// Instantiates the arc.
+    /// </summary>
+    /// <param name="start">Start.</param>
+    /// <param name="end">End.</param>
     private void _InstantiateArc (Vector3 start, Vector3 end) {
         var go = _arcFactory.GetArc ();
         _arcList.Add (go);
 
-        go.AddComponent<StealCamTextures> ();
+        go.AddComponent<GetCameraTextures> ();
         go.AddComponent<ShatterOnDistance> ();
 
         go.GetComponent<MeshRenderer> ().material = _arcMaterial;
@@ -66,6 +80,10 @@ public class ArcManager : Singleton<ArcManager> {
         arc.Generate ();
     }
 
+    /// <summary>
+    /// Collects the point.
+    /// </summary>
+    /// <param name="point">Point.</param>
     private void _CollectPoint (Vector3 point) {
         if (_startPoint == null ) {
             _startPoint = point;

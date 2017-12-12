@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Basic touch input manager with appropriate events
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,6 +39,9 @@ public class InputManager : Singleton<InputManager> {
 		#endif
 	}
 
+    /// <summary>
+    /// Checks the touch.
+    /// </summary>
 	private void CheckTouch () {
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
@@ -64,6 +71,9 @@ public class InputManager : Singleton<InputManager> {
 		}
 	}
 
+    /// <summary>
+    /// Checks the mouse.
+    /// </summary>
     private void CheckMouse()
     {
         if (Input.GetMouseButtonDown(0))

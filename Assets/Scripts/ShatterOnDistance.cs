@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Used to calculate the distance between the arc object and the camera and set the value to a shader to determine when it should "shatter"
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

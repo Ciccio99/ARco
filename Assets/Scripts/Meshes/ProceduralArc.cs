@@ -1,7 +1,13 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Procedural arc class, given a set of points will render an arc in space
+ */
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Timers;
+using System.Diagnostics;
 
 [ExecuteInEditMode]
 [RequireComponent (typeof (MeshFilter), typeof (MeshRenderer))]
@@ -18,6 +24,11 @@ public class ProceduralArc : MonoBehaviour {
     private Mesh _mesh;
     private Vector3[] _vertices;
 
+    /// <summary>
+    /// Sets the points.
+    /// </summary>
+    /// <param name="start">Start.</param>
+    /// <param name="end">End.</param>
     public void SetPoints (Vector3 start, Vector3 end) {
         bezierPointsPosition = new Vector3[3];
         bezierPointsPosition[0] = start;
@@ -30,12 +41,21 @@ public class ProceduralArc : MonoBehaviour {
         bezierPointsPosition[1] = finalMid;
     }   
 
+    /// <summary>
+    /// Generate the specified points and lineSteps.
+    /// </summary>
+    /// <returns>The generate.</returns>
+    /// <param name="points">Points.</param>
+    /// <param name="lineSteps">Line steps.</param>
     public void Generate (Vector3[] points, int lineSteps) {
         this.lineSteps = lineSteps;
         GetComponent<MeshFilter> ().mesh = _mesh = new Mesh ();
         _mesh.name = "Procedural Arc";
 
         UnityEngine.Random.InitState ((int) DateTime.Now.Ticks);
+
+        var stopwatch = new Stopwatch ();
+        stopwatch.Start ();
 
         if (noisyArc)
             _CreateVertices (points, true);
@@ -46,8 +66,14 @@ public class ProceduralArc : MonoBehaviour {
 
         _mesh.RecalculateNormals ();
         _mesh.RecalculateTangents ();
+
+        stopwatch.Stop ();
+        UnityEngine.Debug.Log ("Render Time for " + points.Length + " vertices: " + stopwatch.ElapsedMilliseconds);
     }
 
+    /// <summary>
+    /// Generate this instance.
+    /// </summary>
     public void Generate () {
         GetComponent<MeshFilter> ().mesh = _mesh = new Mesh ();
         _mesh.name = "Procedural Arc";
@@ -73,6 +99,11 @@ public class ProceduralArc : MonoBehaviour {
         _mesh.RecalculateTangents ();
     }
 
+    /// <summary>
+    /// Creates the vertices.
+    /// </summary>
+    /// <param name="bezierPoints">Bezier points.</param>
+    /// <param name="noise">If set to <c>true</c> noise.</param>
     private void _CreateVertices (Vector3[] bezierPoints, bool noise = false) {
         
         int vertexCount = bezierPoints.Length * smoothness;
@@ -182,6 +213,10 @@ public class ProceduralArc : MonoBehaviour {
         _mesh.vertices = _vertices;
     }
 
+    /// <summary>
+    /// Creates the triangles.
+    /// </summary>
+    /// <param name="bezierPoints">Bezier points.</param>
     private void _CreateTriangles (Vector3[] bezierPoints) {
         // smoothnes == # of faces per ring
 
@@ -199,6 +234,16 @@ public class ProceduralArc : MonoBehaviour {
         _mesh.triangles = triangles;
     }
 
+    /// <summary>
+    /// Sets the quad.
+    /// </summary>
+    /// <returns>The quad.</returns>
+    /// <param name="triangles">Triangles.</param>
+    /// <param name="i">The index.</param>
+    /// <param name="v00">V00.</param>
+    /// <param name="v01">V01.</param>
+    /// <param name="v10">V10.</param>
+    /// <param name="v11">V11.</param>
     private static int _SetQuad (int[] triangles, int i, int v00, int v01, int v10, int v11) {
         triangles[i] = v00;
         triangles[i + 1] = triangles[i + 4] = v01;
@@ -219,6 +264,9 @@ public class ProceduralArc : MonoBehaviour {
     //    }
     //}
 
+    /// <summary>
+    /// On the validate.
+    /// </summary>
     private void OnValidate()
     {
         if (smoothness < 3) smoothness = 3;

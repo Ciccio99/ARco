@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Controls a bezier curve, adjustable by a user in the editor
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,10 +42,18 @@ public class BezierCurve : MonoBehaviour {
 		_lineRenderer = GetComponent<LineRenderer> () ?? gameObject.AddComponent<LineRenderer> ();
 	}
 
+    /// <summary>
+    /// Gets the point.
+    /// </summary>
+    /// <returns>The point.</returns>
+    /// <param name="t">T.</param>
 	public Vector3 GetPoint (float t) {
 		return transform.TransformPoint (Bezier.GetPoint (points[0], points[1], points[2], t));
 	}
 
+    /// <summary>
+    /// Sets the line renderer curve.
+    /// </summary>
 	public void SetLineRendererCurve () {
         _lineRenderer = GetComponent<LineRenderer> () ?? gameObject.AddComponent<LineRenderer> ();
 		_bezierVertices = new Vector3[lineSteps + 1];
@@ -56,6 +68,12 @@ public class BezierCurve : MonoBehaviour {
 		_lineRenderer.SetPositions (_bezierVertices);
 	}
 
+    /// <summary>
+    /// Sets the main points.
+    /// </summary>
+    /// <param name="start">Start.</param>
+    /// <param name="mid">Middle.</param>
+    /// <param name="end">End.</param>
 	public void SetMainPoints (Vector3 start, Vector3 mid, Vector3 end) {
 		points[0] = start;
 		points[1] = mid;

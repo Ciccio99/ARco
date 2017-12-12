@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Sample script to create a rounded cube, used to understand how to create 3D meshes
+ */
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof (MeshFilter), typeof (MeshRenderer))]

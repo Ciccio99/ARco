@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Alberto Scicali
+ * Plane surface manager
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
@@ -15,6 +19,10 @@ public class ARPlaneManager : Singleton<ARPlaneManager> {
 		UnityARSessionNativeInterface.ARAnchorRemovedEvent += OnPlaneRemoved;
 	}
 
+    /// <summary>
+    /// On the plane added.
+    /// </summary>
+    /// <param name="anchor">Anchor.</param>
 	public void OnPlaneAdded (ARPlaneAnchor anchor) {
 		if (!_storedPlaneAnchors.ContainsKey (anchor.identifier)) {
 			var planeAnchor = new PlaneAnchor (anchor, GameObject.Instantiate (planePrefab)); 
@@ -22,11 +30,19 @@ public class ARPlaneManager : Singleton<ARPlaneManager> {
 		}
 	}
 
+    /// <summary>
+    /// On the plane removed.
+    /// </summary>
+    /// <param name="anchor">Anchor.</param>
 	public void OnPlaneRemoved (ARPlaneAnchor anchor) {
 		Destroy (_storedPlaneAnchors[anchor.identifier].planeObject);
 		_storedPlaneAnchors.Remove (anchor.identifier);
 	}
 
+    /// <summary>
+    /// On the plane updated.
+    /// </summary>
+    /// <param name="anchor">Anchor.</param>
 	public void OnPlaneUpdated (ARPlaneAnchor anchor) {
 		if (_storedPlaneAnchors.ContainsKey (anchor.identifier)) {
 			_storedPlaneAnchors[anchor.identifier].UpdateAnchor (anchor);

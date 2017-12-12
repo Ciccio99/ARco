@@ -1,7 +1,19 @@
-﻿using UnityEngine;
+﻿/*
+ * Author: Alberto Scicali
+ * Calculates bezier points along a curve given a start, middle and end point
+ */
+using UnityEngine;
 
 public static class Bezier {
 
+    /// <summary>
+    /// Gets the point.
+    /// </summary>
+    /// <returns>The point.</returns>
+    /// <param name="p0">P0.</param>
+    /// <param name="p1">P1.</param>
+    /// <param name="p2">P2.</param>
+    /// <param name="t">T.</param>
 	public static Vector3 GetPoint (Vector3 p0, Vector3 p1, Vector3 p2, float t) {
 		t = Mathf.Clamp01 (t);
 		float oneMinusT = 1f - t;
@@ -13,6 +25,14 @@ public static class Bezier {
 		// return Vector3.Lerp (Vector3.Lerp (p0, p1, t), Vector3.Lerp (p1, p2, t), t);
 	}
 
+    /// <summary>
+    /// Gets the bezier curve points.
+    /// </summary>
+    /// <returns>The bezier curve points.</returns>
+    /// <param name="steps">Steps.</param>
+    /// <param name="p0">P0.</param>
+    /// <param name="p1">P1.</param>
+    /// <param name="p2">P2.</param>
     public static Vector3[] GetBezierCurvePoints (int steps, Vector3 p0, Vector3 p1, Vector3 p2) {
         var bezierVertices = new Vector3[steps + 1];
 

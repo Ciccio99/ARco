@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class VoronoiRandom : MonoBehaviour {
 
@@ -8,9 +9,10 @@ public class VoronoiRandom : MonoBehaviour {
     public float minY = -1;
     public float maxY = +1;
 
-    public int length = 100;
+    public int length = 10;
 
-    public Vector2[] points;
+    public Vector4[] points;
+    public List<Vector4> pointsList;
     public Color[] colours;
 
     private Material material;
@@ -19,22 +21,27 @@ public class VoronoiRandom : MonoBehaviour {
     void Start () {
         material = GetComponent<Renderer>().sharedMaterial;
 
-        points = new Vector2[length];
+        points = new Vector4[length];
+        pointsList = new List<Vector4> (length);
         colours = new Color[length];
-
         for (int i = 0; i < length; i ++)
         {
-            points[i] = new Vector2
+            points[i] = new Vector4
             (
-                transform.position.x + Random.Range(minX, maxX),
-                transform.position.y + Random.Range(minY, maxY)
-            );;
+                transform.position.x + Random.Range (minX, maxX),
+                transform.position.y + Random.Range (minY, maxY),
+                transform.position.z + Random.Range (minY, maxY),
+                    0f
+            );
+            pointsList.Add (points[i]);
             colours[i] = HSVToRGB( (1f / length) * i, 0.75f, 0.75f);
 
             // Shader
-            material.SetVector("_Points" + i.ToString(), points[i]);
-            material.SetVector("_Colors" + i.ToString(), colours[i]);
+
+
+           // material.SetVector("_Colors" + i.ToString(), colours[i]);
         }
+        material.SetVectorArray ("_Points", pointsList);
         material.SetInt("_Length", length);
     }
 
@@ -49,9 +56,13 @@ public class VoronoiRandom : MonoBehaviour {
         {
             points[i].x += Random.Range(-0.1f, +0.1f) * amount;
             points[i].y += Random.Range(-0.1f, +0.1f) * amount;
+            points[i].z += Random.Range (-0.1f, +0.1f) * amount;
+            pointsList[i] = points[i];
+
             // Shader
-            material.SetVector("_Points" + i.ToString(), points[i]);
-            material.SetVector("_Colors" + i.ToString(), colours[i]);
+            material.SetVectorArray ("_Points", pointsList);
+            //material.SetVector("_Points" + i.ToString(), points[i]);
+            //material.SetVector("_Colors" + i.ToString(), colours[i]);
         }
     }
 

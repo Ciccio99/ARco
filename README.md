@@ -24,7 +24,6 @@ Here are the ways in which these problems were tackled:
 - Applying a "glass" shader to the arc. This is done by taking the background texture of the camera, performing a refraction and  ray cast calculation from the vertex of the arc, and then sampling the camera's texture.
 - The shattering affect is created throug geometry shaders. The tesselation triangles are shifted along their face normals by a certain distance (determined by the distance between the camera and the vertex). Unfortunately, geometry shaders are currently not available on Apple's Metal 2 Graphics API, which means this could not be visually present on the mobile application.
 - 3D Voronoi diagrams are a complex computation geometry problem that can be simplified to a great degree through shaders. A shader, given a set of voronoi seeds in 3D space, can color any geometries surface depending on which seed a fragment points is closest too. Furthermore, these distance calculations can be performed with Euclidean and Manhattan distance calculations, resulting in varying 3D voronoi shapes.
-(INSERT IMAGES OF DIFF DISTANCES)
 
 ![Alt text](/EuclideanVoronoi.png "Euclidean Distance 3D Voronoi Shader")
 ![Alt text](/manhattenVoronoi.png "Manhatten Distance 3D Voronoi Shader")
